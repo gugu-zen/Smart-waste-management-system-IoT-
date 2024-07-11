@@ -36,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Home'),
         leading: IconButton(
           icon: Icon(Icons.menu),
-          onPressed: () {},
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
         ),
         actions: [
           IconButton(
@@ -68,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: binDataList.length,
               itemBuilder: (context, index) {
                 return TrashCard(
-                  title: 'Trash',
+                  title: 'Garbage ${binDataList[index].garbageLevel}',
                   level: binDataList[index].garbageLevel.toInt(),
                   color: _getColorForLevel(binDataList[index].garbageLevel),
                 );
@@ -104,9 +106,8 @@ class TrashCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Card(
         child: ListTile(
-          leading: Icon(
-            Icons.delete,
-            color: color,
+          leading: Image.asset(
+            'assets/trash_icon.png',
           ),
           title: Text(title),
           subtitle: LinearProgressIndicator(

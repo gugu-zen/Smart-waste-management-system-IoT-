@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:smart_waste_management_system/model/bin_data.dart'; 
 import 'package:smart_waste_management_system/services/thingspeak_service.dart';
 import 'package:smart_waste_management_system/widget/garbage_level_chart.dart'; 
+import 'package:smart_waste_management_system/database/database_helper.dart';
 
 class DashboardScreen extends StatelessWidget {
   final ThingSpeakService _thingSpeakService = ThingSpeakService();
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,10 @@ class DashboardScreen extends StatelessWidget {
           } else {
             // Data fetched successfully
             List<BinData> binDataList = snapshot.data!;
+            // Save fetched data to the database
+            binDataList.forEach((binData) {
+              _databaseHelper.insertBinData(binData);
+            });
             return SingleChildScrollView(
               padding: EdgeInsets.all(16.0),
               child: Column(
@@ -74,7 +80,7 @@ class BinStatusList extends StatelessWidget {
           ),
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           child: ListTile(
-            title: Text('Bin ${binData.garbageLevel}'),
+            title: Text('Trash ${binData.garbageLevel}'),
             subtitle: LinearProgressIndicator(
               value: binData.garbageLevel / 100.0,
               backgroundColor: Colors.grey[200],

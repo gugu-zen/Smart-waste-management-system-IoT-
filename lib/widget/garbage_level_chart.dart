@@ -29,16 +29,18 @@ class GarbageLevelsChart extends StatelessWidget {
             SizedBox(height: 16.0),
             Container(
               height: 200.0,
-              child: LineChart(
-                LineChartData(
-                  gridData: FlGridData(show: false),
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: 100,
+                  barTouchData: BarTouchData(enabled: false),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (double value, TitleMeta meta) {
                           return Text(
-                            '${value.toInt()}%',
+                            '${value.toInt()}',
                             style: const TextStyle(
                               color: Color(0xff67727d),
                               fontWeight: FontWeight.bold,
@@ -55,7 +57,7 @@ class GarbageLevelsChart extends StatelessWidget {
                         showTitles: true,
                         getTitlesWidget: (double value, TitleMeta meta) {
                           return Text(
-                            'Bin ${value.toInt()}',
+                            'Garbage ${value.toInt()}',
                             style: const TextStyle(
                               color: Color(0xff68737d),
                               fontWeight: FontWeight.bold,
@@ -68,24 +70,21 @@ class GarbageLevelsChart extends StatelessWidget {
                       ),
                     ),
                   ),
-                  borderData: FlBorderData(show: true),
-                  minX: 0,
-                  maxX: binDataList.length.toDouble() - 1,
-                  minY: 0,
-                  maxY: 100,
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: binDataList.asMap().entries.map((entry) {
-                        return FlSpot(entry.key.toDouble(), entry.value.garbageLevel);
-                      }).toList(),
-                      isCurved: true,
-                      gradient: LinearGradient(colors: [Colors.blue]),
-                      barWidth: 4,
-                      isStrokeCapRound: true,
-                      dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(show: false),
-                    ),
-                  ],
+                  borderData: FlBorderData(show: false),
+                  barGroups: binDataList.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    double garbageLevel = entry.value.garbageLevel;
+                    return BarChartGroupData(
+                      x: index,
+                      barRods: [
+                        BarChartRodData(
+                          toY: garbageLevel,
+                          color: _getColorForLevel(garbageLevel),
+                          width: 16,
+                        ),
+                      ],
+                    );
+                  }).toList(),
                 ),
               ),
             ),
@@ -93,5 +92,15 @@ class GarbageLevelsChart extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _getColorForLevel(double level) {
+    if (level < 30) {
+      return Colors.green;
+    } else if (level < 70) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
+    }
   }
 }
