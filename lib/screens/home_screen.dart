@@ -1,6 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:smart_waste_management_system/model/bin_data.dart';
+import 'package:smart_waste_management_system/services/thingspeak_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<BinData> binDataList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      ThingSpeakService service = ThingSpeakService();
+      List<BinData> data = await service.getData();
+      setState(() {
+        binDataList = data;
+      });
+    } catch (e) {
+      // Handle error
+      print('Error fetching data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +41,9 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.notifications),
-            onPressed: () {},
+            onPressed: () {
+              // Handle notifications
+            },
           ),
         ],
       ),
@@ -34,29 +64,30 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                TrashCard(
+            child: ListView.builder(
+              itemCount: binDataList.length,
+              itemBuilder: (context, index) {
+                return TrashCard(
                   title: 'Trash',
-                  level: 20,
-                  color: Colors.green,
-                ),
-                TrashCard(
-                  title: 'Trash',
-                  level: 50,
-                  color: Colors.orange,
-                ),
-                TrashCard(
-                  title: 'Trash',
-                  level: 79,
-                  color: Colors.red,
-                ),
-              ],
+                  level: binDataList[index].garbageLevel.toInt(),
+                  color: _getColorForLevel(binDataList[index].garbageLevel),
+                );
+              },
             ),
           ),
         ],
       ),
     );
+  }
+
+  Color _getColorForLevel(double level) {
+    if (level < 30) {
+      return Colors.green;
+    } else if (level < 70) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
+    }
   }
 }
 
