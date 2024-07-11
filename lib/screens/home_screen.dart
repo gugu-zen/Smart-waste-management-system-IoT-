@@ -37,18 +37,18 @@ class HomeScreen extends StatelessWidget {
             child: ListView(
               children: [
                 TrashCard(
-                  title: 'Trash 1',
-                  percentage: 20,
+                  title: 'Trash',
+                  level: 20,
                   color: Colors.green,
                 ),
                 TrashCard(
-                  title: 'Trash 2',
-                  percentage: 50,
+                  title: 'Trash',
+                  level: 50,
                   color: Colors.orange,
                 ),
                 TrashCard(
-                  title: 'Trash 3',
-                  percentage: 79,
+                  title: 'Trash',
+                  level: 79,
                   color: Colors.red,
                 ),
               ],
@@ -62,10 +62,10 @@ class HomeScreen extends StatelessWidget {
 
 class TrashCard extends StatelessWidget {
   final String title;
-  final int percentage;
+  final int level;
   final Color color;
 
-  TrashCard({required this.title, required this.percentage, required this.color});
+  TrashCard({required this.title, required this.level, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +79,11 @@ class TrashCard extends StatelessWidget {
           ),
           title: Text(title),
           subtitle: LinearProgressIndicator(
-            value: percentage / 100,
+            value: level / 100,
             backgroundColor: Colors.grey[200],
             color: color,
           ),
-          trailing: Text('$percentage%'),
+          trailing: Text('$level%'),
         ),
       ),
     );
