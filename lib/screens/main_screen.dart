@@ -3,24 +3,6 @@ import 'package:smart_waste_management_system/screens/dashboard_screen.dart';
 import 'package:smart_waste_management_system/screens/home_screen.dart';
 import 'package:smart_waste_management_system/screens/profile_screen.dart';
 
-
-void main() {
-  runApp(SmartWasteManagementApp());
-}
-
-class SmartWasteManagementApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Smart Waste Management',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MainScreen(),
-    );
-  }
-}
-
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
